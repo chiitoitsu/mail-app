@@ -20,7 +20,7 @@ export default function Mail({ title }) {
 }
 
 Mail.propTypes = {
-	text: PropTypes.string.isRequired
+	title: PropTypes.string.isRequired
 }
 
 const styles = StyleSheet.create({
