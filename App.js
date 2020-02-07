@@ -32,7 +32,8 @@ export default class App extends React.Component {
 				content={<Menu />}
 				tapToClose={true}
 				openDrawerOffset={0.5} // 50% gap on the right side of drawer
-				panThreshold={0.1}
+				panOpenMask={0.5}
+				negotiatePan={true}
 				tweenHandler={ratio => ({
 					main: { opacity: (2 - ratio) / 2 }
 				})}
