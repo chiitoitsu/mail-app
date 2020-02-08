@@ -1,30 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { StyleSheet, Text, View, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
-import { AppLoading } from 'expo'
-import Mail from './Mail'
 
 const { height, width } = Dimensions.get('window')
 
-export default class MailBox extends React.Component {
-	state = {
-		loadedMails: true
-	}
-
+export default class MailAdd extends React.Component {
 	render() {
-		const { loadedMails } = this.state
-
-		if (!loadedMails) {
-			return <AppLoading />
-		}
 		return (
 			<View style={styles.container}>
-				<Text style={styles.title}>전체 메일</Text>
+				<Text style={styles.title}>메일 추가</Text>
 
-				<ScrollView style={styles.mailBox} contentContainerStyle={styles.mails}>
-					<Mail title='연어 먹고싶다' />
-					<Mail title='참치도 먹고싶다' />
-					<Mail title='킹무튼 해산물이 먹고싶다' />
+				<ScrollView style={styles.mailAdd} contentContainerStyle={styles.mails}>
+					<Text>선택</Text>
 				</ScrollView>
 			</View>
 		)
@@ -48,7 +35,7 @@ const styles = StyleSheet.create({
 		borderColor: 'black',
 		borderWidth: 1
 	},
-	mailBox: {
+	mailAdd: {
 		width: width - 25,
 		borderColor: 'black',
 		borderWidth: 1

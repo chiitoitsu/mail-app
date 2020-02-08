@@ -6,25 +6,25 @@ import Mail from './Mail'
 
 const { height, width } = Dimensions.get('window')
 
-export default class MailBox extends React.Component {
+export default class TrashBox extends React.Component {
 	state = {
-		loadedMails: true
+		loadedTrashes: true
 	}
 
 	render() {
-		const { loadedMails } = this.state
+		const { loadedTrashes } = this.state
 
-		if (!loadedMails) {
+		if (!loadedTrashes) {
 			return <AppLoading />
 		}
 		return (
 			<View style={styles.container}>
-				<Text style={styles.title}>전체 메일</Text>
+				<Text style={styles.title}>휴지통</Text>
 
-				<ScrollView style={styles.mailBox} contentContainerStyle={styles.mails}>
-					<Mail title='연어 먹고싶다' />
-					<Mail title='참치도 먹고싶다' />
-					<Mail title='킹무튼 해산물이 먹고싶다' />
+				<ScrollView style={styles.trashBox} contentContainerStyle={styles.mails}>
+					<Mail title='삭제할 메일 1' />
+					<Mail title='삭제할 메일 2' />
+					<Mail title='삭제할 메일 3' />
 				</ScrollView>
 			</View>
 		)
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
 		borderColor: 'black',
 		borderWidth: 1
 	},
-	mailBox: {
+	trashBox: {
 		width: width - 25,
 		borderColor: 'black',
 		borderWidth: 1

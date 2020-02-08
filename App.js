@@ -6,12 +6,13 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 // https://expo.github.io/vector-icons/
 import Menu from './Menu'
 import MailBox from './Mailbox'
+import MailAdd from './Mailadd'
+import TrashBox from './Trashbox'
 
 const { height, width } = Dimensions.get('window')
 
 export default class App extends React.Component {
 	state = {
-		loadedMails: true,
 		currentScreen: 'mailBox', // option, mailBox, mailAdd, postBox, trashBox
 		mailBox: {}, // 전체 메일
 		postBox: {}, // 메일 보관함
@@ -20,6 +21,7 @@ export default class App extends React.Component {
 
 	setScreen = dataFromChild => {
 		this.setState({ currentScreen: dataFromChild })
+		this.closeControlPanel()
 	}
 
 	closeControlPanel = () => {
@@ -31,10 +33,8 @@ export default class App extends React.Component {
 	}
 
 	render() {
-		const { loadedMails, currentScreen } = this.state
-		if (!loadedMails) {
-			return <AppLoading />
-		}
+		const { currentScreen } = this.state
+
 		return (
 			<Drawer
 				ref={ref => (this._drawer = ref)}
@@ -52,6 +52,8 @@ export default class App extends React.Component {
 				<StatusBar hidden={true} />
 				{(() => {
 					if (currentScreen == 'mailBox') return <MailBox />
+					else if (currentScreen == 'mailAdd') return <MailAdd />
+					else if (currentScreen == 'trashBox') return <TrashBox />
 					else
 						return (
 							<View>

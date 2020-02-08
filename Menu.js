@@ -15,16 +15,16 @@ export default function Menu({ callback }) {
 				</Text>
 			</TouchableOpacity>
 			<TouchableOpacity onPress={() => callback('mailBox')}>
-				<Text>전체 메일</Text>
+				<Text style={styles.items}>전체 메일</Text>
 			</TouchableOpacity>
 			<TouchableOpacity onPress={() => callback('mailAdd')}>
-				<Text>메일 추가</Text>
+				<Text style={styles.items}>메일 추가</Text>
 			</TouchableOpacity>
 			<TouchableOpacity onPress={() => callback('postBox')}>
-				<Text>보관함 추가</Text>
+				<Text style={styles.items}>보관함 추가</Text>
 			</TouchableOpacity>
 			<TouchableOpacity onPress={() => callback('trashBox')}>
-				<Text>휴지통</Text>
+				<Text style={styles.items}>휴지통</Text>
 			</TouchableOpacity>
 		</View>
 	)
@@ -47,5 +47,13 @@ const styles = StyleSheet.create({
 		paddingVertical: 10,
 		borderColor: 'black',
 		borderBottomWidth: 1
+	},
+	items: {
+		fontSize: 20,
+		margin: 10,
+		width: 100,
+		textAlign: 'center',
+		borderColor: 'black',
+		borderWidth: 1
 	}
 })
