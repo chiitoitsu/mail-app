@@ -22,9 +22,9 @@ export default class MailBox extends React.Component {
 				<Text style={styles.title}>전체 메일</Text>
 
 				<ScrollView style={styles.mailBox} contentContainerStyle={styles.mails}>
-					<Mail title='연어 먹고싶다' />
-					<Mail title='참치도 먹고싶다' />
-					<Mail title='킹무튼 해산물이 먹고싶다' />
+					<Mail sender='나' date='2020.02.09' title='연어 먹고싶다' />
+					<Mail sender='고기' date='2020.02.10' title='참치도 먹고싶다' />
+					<Mail sender='감자' date='2020.02.11' title='킹무튼 해산물이 먹고싶다' />
 				</ScrollView>
 			</View>
 		)

@@ -1,22 +1,44 @@
 import React from 'react'
-import { StyleSheet, Text, View, Dimensions } from 'react-native'
+import { StyleSheet, Text, View, Dimensions, TouchableOpacity, Alert } from 'react-native'
 import PropTypes from 'prop-types'
 
 const { height, width } = Dimensions.get('window')
 
-export default function Mail({ title }) {
-	return (
-		<View style={styles.container}>
-			<View style={styles.logo} />
-			<View style={styles.column}>
-				<View style={styles.row}>
-					<Text style={styles.text}>나</Text>
-					<Text style={styles.text}>2020.##.##</Text>
+export default class Mail extends React.Component {
+	constructor(props) {
+		super(props)
+		this.state = {
+			sender: props.sender,
+			date: props.date,
+			title: props.title
+		}
+	}
+
+	static propTypes = {
+		sender: PropTypes.string.isRequired,
+		date: PropTypes.string.isRequired,
+		title: PropTypes.string.isRequired
+	}
+
+	_openMenu = () => {
+		Alert.alert('long pressed')
+	}
+
+	render() {
+		const { sender, date, title } = this.state
+		return (
+			<TouchableOpacity style={styles.container} onLongPress={this._openMenu}>
+				<View style={styles.logo} />
+				<View style={styles.column}>
+					<View style={styles.row}>
+						<Text style={styles.text}>{sender}</Text>
+						<Text style={styles.text}>{date}</Text>
+					</View>
+					<Text style={styles.text}>제목 : {title}</Text>
 				</View>
-				<Text style={styles.text}>제목 : {title}</Text>
-			</View>
-		</View>
-	)
+			</TouchableOpacity>
+		)
+	}
 }
 
 Mail.propTypes = {

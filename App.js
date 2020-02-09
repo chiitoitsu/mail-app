@@ -19,16 +19,16 @@ export default class App extends React.Component {
 		trashBox: {} // 휴지통
 	}
 
-	setScreen = dataFromChild => {
+	_setScreen = dataFromChild => {
 		this.setState({ currentScreen: dataFromChild })
-		this.closeControlPanel()
+		this._closeControlPanel()
 	}
 
-	closeControlPanel = () => {
+	_closeControlPanel = () => {
 		this._drawer.close()
 	}
 
-	openControlPanel = () => {
+	_openControlPanel = () => {
 		this._drawer.open()
 	}
 
@@ -40,7 +40,7 @@ export default class App extends React.Component {
 				ref={ref => (this._drawer = ref)}
 				type='overlay'
 				side='left'
-				content={<Menu callback={this.setScreen} />}
+				content={<Menu callback={this._setScreen} />}
 				tapToClose={true}
 				openDrawerOffset={0.5} // 50% gap on the right side of drawer
 				panOpenMask={0.5}

@@ -22,9 +22,9 @@ export default class TrashBox extends React.Component {
 				<Text style={styles.title}>휴지통</Text>
 
 				<ScrollView style={styles.trashBox} contentContainerStyle={styles.mails}>
-					<Mail title='삭제할 메일 1' />
-					<Mail title='삭제할 메일 2' />
-					<Mail title='삭제할 메일 3' />
+					<Mail sender='나' date='2020.02.09' title='삭제할 메일 1' />
+					<Mail sender='나' date='2020.02.09' title='삭제할 메일 2' />
+					<Mail sender='나' date='2020.02.09' title='삭제할 메일 3' />
 				</ScrollView>
 			</View>
 		)
