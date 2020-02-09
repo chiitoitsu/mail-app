@@ -1,6 +1,7 @@
 import React from 'react'
-import { StyleSheet, Text, View, Dimensions, TouchableOpacity, Alert } from 'react-native'
 import PropTypes from 'prop-types'
+import { StyleSheet, Text, View, Dimensions, TouchableOpacity } from 'react-native'
+import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu'
 
 const { height, width } = Dimensions.get('window')
 
@@ -21,13 +22,27 @@ export default class Mail extends React.Component {
 	}
 
 	_openMenu = () => {
-		Alert.alert('long pressed')
+		this._menu.open()
 	}
 
 	render() {
 		const { sender, date, title } = this.state
 		return (
 			<TouchableOpacity style={styles.container} onLongPress={this._openMenu}>
+				<Menu ref={ref => (this._menu = ref)}>
+					<MenuTrigger />
+					<MenuOptions>
+						<MenuOption onSelect={() => alert(`Save`)} text='Save' />
+						<MenuOption onSelect={() => alert(`Delete`)}>
+							<Text style={{ color: 'red' }}>Delete</Text>
+						</MenuOption>
+						<MenuOption
+							onSelect={() => alert(`Not called`)}
+							disabled={true}
+							text='Disabled'
+						/>
+					</MenuOptions>
+				</Menu>
 				<View style={styles.logo} />
 				<View style={styles.column}>
 					<View style={styles.row}>
