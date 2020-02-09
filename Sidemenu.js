@@ -5,7 +5,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 const { height, width } = Dimensions.get('window')
 
-export default function Menu({ callback }) {
+export default function SideMenu({ callback }) {
 	return (
 		<View style={styles.container}>
 			<TouchableOpacity onPress={() => callback('option')}>
@@ -30,7 +30,7 @@ export default function Menu({ callback }) {
 	)
 }
 
-Menu.propTypes = {
+SideMenu.propTypes = {
 	callback: PropTypes.func.isRequired
 }
 

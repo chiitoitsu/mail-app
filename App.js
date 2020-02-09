@@ -4,7 +4,7 @@ import Drawer from 'react-native-drawer'
 import { AppLoading } from 'expo'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 // https://expo.github.io/vector-icons/
-import Menu from './Menu'
+import SideMenu from './Sidemenu'
 import MailBox from './Mailbox'
 import MailAdd from './Mailadd'
 import TrashBox from './Trashbox'
@@ -40,7 +40,7 @@ export default class App extends React.Component {
 				ref={ref => (this._drawer = ref)}
 				type='overlay'
 				side='left'
-				content={<Menu callback={this._setScreen} />}
+				content={<SideMenu callback={this._setScreen} />}
 				tapToClose={true}
 				openDrawerOffset={0.5} // 50% gap on the right side of drawer
 				panOpenMask={0.5}
