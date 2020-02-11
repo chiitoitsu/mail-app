@@ -2,6 +2,7 @@ import React from 'react'
 import { StyleSheet, Text, View, StatusBar, Dimensions } from 'react-native'
 import Drawer from 'react-native-drawer'
 import { MenuProvider } from 'react-native-popup-menu'
+import uuidv1 from 'uuid/v1'
 import { AppLoading } from 'expo'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 // https://expo.github.io/vector-icons/
@@ -15,9 +16,29 @@ const { height, width } = Dimensions.get('window')
 export default class App extends React.Component {
 	state = {
 		currentScreen: 'mailBox', // option, mailBox, mailAdd, postBox, trashBox
-		mailBox: {}, // 전체 메일
+		mailBox: {
+			mail1: {
+				id: uuidv1(),
+				sender: '나',
+				date: '2020.01.01',
+				title: '메일1'
+			},
+			mail2: {
+				id: uuidv1(),
+				sender: '나',
+				date: '2020.01.01',
+				title: '메일2'
+			}
+		}, // 전체 메일
 		postBox: {}, // 메일 보관함
-		trashBox: {} // 휴지통
+		trashBox: {
+			mail3: {
+				id: uuidv1(),
+				sender: '나',
+				date: '2020.01.01',
+				title: '삭제할 메일1'
+			}
+		} // 휴지통
 	}
 
 	_setScreen = dataFromChild => {
@@ -33,8 +54,23 @@ export default class App extends React.Component {
 		this._drawer.open()
 	}
 
+	_throwMail = throwedMail => {
+		if (throwedMail != '') {
+			this.setState(prevState => {
+				const newState = {
+					...prevState,
+					trashBox: {
+						...prevState.trashBox,
+						throwedMail
+					}
+				}
+				return { ...newState }
+			})
+		}
+	}
+
 	render() {
-		const { currentScreen } = this.state
+		const { currentScreen, mailBox, postBox, trashBox } = this.state
 
 		return (
 			<MenuProvider>
@@ -53,9 +89,11 @@ export default class App extends React.Component {
 				>
 					<StatusBar hidden={true} />
 					{(() => {
-						if (currentScreen == 'mailBox') return <MailBox />
+						if (currentScreen == 'mailBox')
+							return <MailBox mailBox={mailBox} throwMail={this._throwMail} />
 						else if (currentScreen == 'mailAdd') return <MailAdd />
-						else if (currentScreen == 'trashBox') return <TrashBox />
+						else if (currentScreen == 'trashBox')
+							return <TrashBox trashBox={trashBox} />
 						else
 							return (
 								<View>

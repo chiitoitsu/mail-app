@@ -11,8 +11,13 @@ export default class TrashBox extends React.Component {
 		loadedTrashes: true
 	}
 
+	static propTypes = {
+		trashBox: PropTypes.object.isRequired
+	}
+
 	render() {
 		const { loadedTrashes } = this.state
+		const { trashBox } = this.props
 
 		if (!loadedTrashes) {
 			return <AppLoading />
@@ -22,9 +27,14 @@ export default class TrashBox extends React.Component {
 				<Text style={styles.title}>휴지통</Text>
 
 				<ScrollView style={styles.trashBox} contentContainerStyle={styles.mails}>
-					<Mail sender='나' date='2020.02.09' title='삭제할 메일 1' />
-					<Mail sender='나' date='2020.02.09' title='삭제할 메일 2' />
-					<Mail sender='나' date='2020.02.09' title='삭제할 메일 3' />
+					{Object.values(trashBox).map(mail => (
+						<Mail
+							key={mail.id}
+							sender={mail.sender}
+							date={mail.date}
+							title={mail.title}
+						/>
+					))}
 				</ScrollView>
 			</View>
 		)

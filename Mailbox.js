@@ -11,8 +11,14 @@ export default class MailBox extends React.Component {
 		loadedMails: true
 	}
 
+	static propTypes = {
+		mailBox: PropTypes.object.isRequired,
+		throwMail: PropTypes.func.isRequired
+	}
+
 	render() {
 		const { loadedMails } = this.state
+		const { mailBox, throwMail } = this.props
 
 		if (!loadedMails) {
 			return <AppLoading />
@@ -22,9 +28,14 @@ export default class MailBox extends React.Component {
 				<Text style={styles.title}>전체 메일</Text>
 
 				<ScrollView style={styles.mailBox} contentContainerStyle={styles.mails}>
-					<Mail sender='나' date='2020.02.09' title='연어 먹고싶다' />
-					<Mail sender='고기' date='2020.02.10' title='참치도 먹고싶다' />
-					<Mail sender='감자' date='2020.02.11' title='킹무튼 해산물이 먹고싶다' />
+					{Object.values(mailBox).map(mail => (
+						<Mail
+							key={mail.id}
+							sender={mail.sender}
+							date={mail.date}
+							title={mail.title}
+						/>
+					))}
 				</ScrollView>
 			</View>
 		)
