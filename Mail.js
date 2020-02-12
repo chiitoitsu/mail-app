@@ -9,6 +9,7 @@ export default class Mail extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
+			id: props.id,
 			sender: props.sender,
 			date: props.date,
 			title: props.title
@@ -16,9 +17,11 @@ export default class Mail extends React.Component {
 	}
 
 	static propTypes = {
+		id: PropTypes.string.isRequired,
 		sender: PropTypes.string.isRequired,
 		date: PropTypes.string.isRequired,
-		title: PropTypes.string.isRequired
+		title: PropTypes.string.isRequired,
+		callback: PropTypes.func.isRequired
 	}
 
 	_openMenu = () => {
@@ -26,15 +29,17 @@ export default class Mail extends React.Component {
 	}
 
 	render() {
-		const { sender, date, title } = this.state
+		const { id, sender, date, title } = this.state
+		const { callback } = this.props
+
 		return (
 			<TouchableOpacity style={styles.container} onLongPress={this._openMenu}>
 				<Menu ref={ref => (this._menu = ref)}>
 					<MenuTrigger />
 					<MenuOptions>
 						<MenuOption onSelect={() => alert(`Save`)} text='Save' />
-						<MenuOption onSelect={() => alert(`Delete`)}>
-							<Text style={{ color: 'red' }}>Delete</Text>
+						<MenuOption onSelect={() => callback(id, 'throw')}>
+							<Text style={{ color: 'red' }}>Throw</Text>
 						</MenuOption>
 						<MenuOption
 							onSelect={() => alert(`Not called`)}

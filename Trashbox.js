@@ -12,12 +12,13 @@ export default class TrashBox extends React.Component {
 	}
 
 	static propTypes = {
-		trashBox: PropTypes.object.isRequired
+		trashBox: PropTypes.object.isRequired,
+		setMail: PropTypes.func.isRequired
 	}
 
 	render() {
 		const { loadedTrashes } = this.state
-		const { trashBox } = this.props
+		const { trashBox, setMail } = this.props
 
 		if (!loadedTrashes) {
 			return <AppLoading />
@@ -30,9 +31,11 @@ export default class TrashBox extends React.Component {
 					{Object.values(trashBox).map(mail => (
 						<Mail
 							key={mail.id}
+							id={mail.id}
 							sender={mail.sender}
 							date={mail.date}
 							title={mail.title}
+							callback={setMail}
 						/>
 					))}
 				</ScrollView>

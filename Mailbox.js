@@ -13,12 +13,12 @@ export default class MailBox extends React.Component {
 
 	static propTypes = {
 		mailBox: PropTypes.object.isRequired,
-		throwMail: PropTypes.func.isRequired
+		setMail: PropTypes.func.isRequired
 	}
 
 	render() {
 		const { loadedMails } = this.state
-		const { mailBox, throwMail } = this.props
+		const { mailBox, setMail } = this.props
 
 		if (!loadedMails) {
 			return <AppLoading />
@@ -31,9 +31,11 @@ export default class MailBox extends React.Component {
 					{Object.values(mailBox).map(mail => (
 						<Mail
 							key={mail.id}
+							id={mail.id}
 							sender={mail.sender}
 							date={mail.date}
 							title={mail.title}
+							callback={setMail}
 						/>
 					))}
 				</ScrollView>
