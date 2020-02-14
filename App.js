@@ -23,7 +23,8 @@ export default class App extends React.Component {
 				id: '111',
 				sender: 'asdf',
 				date: '123123',
-				title: 'asdf'
+				title: 'asdf',
+				isThrowed: true
 			}
 		} // 휴지통
 	}
@@ -64,7 +65,8 @@ export default class App extends React.Component {
 					id: ID,
 					sender: '나',
 					date: '2020.01.01',
-					title: '메일'
+					title: '메일',
+					isThrowed: false
 				}
 			}
 			const newState = {
@@ -80,7 +82,24 @@ export default class App extends React.Component {
 
 	_setMail = (id, option) => {
 		if (option == 'throw') {
-			// 버리기 (휴지통으로 들어가는 기능 미구현)
+			// 버리기
+			this.setState(prevState => {
+				const throwedMail = {
+					[id]: {
+						...prevState.mailBox[id],
+						isThrowed: true
+					}
+				}
+				const newState = {
+					...prevState,
+					trashBox: {
+						...prevState.trashBox,
+						...throwedMail
+					}
+				}
+
+				return { ...newState }
+			})
 			this.setState(prevState => {
 				const mailBox = prevState.mailBox
 				delete mailBox[id]

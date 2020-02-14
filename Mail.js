@@ -12,7 +12,8 @@ export default class Mail extends React.Component {
 			id: props.id,
 			sender: props.sender,
 			date: props.date,
-			title: props.title
+			title: props.title,
+			isThrowed: props.isThrowed
 		}
 	}
 
@@ -21,6 +22,7 @@ export default class Mail extends React.Component {
 		sender: PropTypes.string.isRequired,
 		date: PropTypes.string.isRequired,
 		title: PropTypes.string.isRequired,
+		isThrowed: PropTypes.bool.isRequired,
 		callback: PropTypes.func.isRequired
 	}
 
@@ -29,7 +31,7 @@ export default class Mail extends React.Component {
 	}
 
 	render() {
-		const { id, sender, date, title } = this.state
+		const { id, sender, date, title, isThrowed } = this.state
 		const { callback } = this.props
 
 		return (
@@ -38,8 +40,10 @@ export default class Mail extends React.Component {
 					<MenuTrigger />
 					<MenuOptions>
 						<MenuOption onSelect={() => alert(`Save`)} text='Save' />
-						<MenuOption onSelect={() => callback(id, 'throw')}>
-							<Text style={{ color: 'red' }}>Throw</Text>
+						<MenuOption onSelect={() => callback(id, !isThrowed ? 'throw' : 'delete')}>
+							<Text style={{ color: 'red' }}>
+								{!isThrowed ? '버리기' : '삭제하기'}
+							</Text>
 						</MenuOption>
 						<MenuOption
 							onSelect={() => alert(`Not called`)}
