@@ -42,21 +42,6 @@ export default class App extends React.Component {
 		this._drawer.open()
 	}
 
-	_throwMail = throwedMail => {
-		if (throwedMail != '') {
-			this.setState(prevState => {
-				const newState = {
-					...prevState,
-					trashBox: {
-						...prevState.trashBox,
-						throwedMail
-					}
-				}
-				return { ...newState }
-			})
-		}
-	}
-
 	_addMail = () => {
 		this.setState(prevState => {
 			const ID = uuidv1()
