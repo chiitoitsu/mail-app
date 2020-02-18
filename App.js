@@ -1,5 +1,13 @@
 import React from 'react'
-import { StyleSheet, Text, View, StatusBar, Dimensions, TouchableOpacity } from 'react-native'
+import {
+	StyleSheet,
+	Text,
+	View,
+	StatusBar,
+	Dimensions,
+	TouchableOpacity,
+	AsyncStorage
+} from 'react-native'
 import Drawer from 'react-native-drawer'
 import { MenuProvider } from 'react-native-popup-menu'
 import uuidv1 from 'uuid/v1'
@@ -18,15 +26,7 @@ export default class App extends React.Component {
 		currentScreen: 'mailBox', // option, mailBox, mailAdd, postBox, trashBox
 		mailBox: {}, // 전체 메일
 		postBox: {}, // 메일 보관함
-		trashBox: {
-			[111]: {
-				id: '111',
-				sender: 'asdf',
-				date: '123123',
-				title: 'asdf',
-				isThrowed: true
-			}
-		} // 휴지통
+		trashBox: {} // 휴지통
 	}
 
 	_setScreen = dataFromChild => {
@@ -50,7 +50,7 @@ export default class App extends React.Component {
 					id: ID,
 					sender: '나',
 					date: '2020.01.01',
-					title: '메일',
+					title: ID,
 					isThrowed: false
 				}
 			}
@@ -61,6 +61,7 @@ export default class App extends React.Component {
 					...newMail
 				}
 			}
+			this._saveMailBox(newState.mailBox)
 			return { ...newState }
 		})
 	}
@@ -82,7 +83,7 @@ export default class App extends React.Component {
 						...throwedMail
 					}
 				}
-
+				this._saveTrashBox(newState.trashBox)
 				return { ...newState }
 			})
 			this.setState(prevState => {
@@ -93,7 +94,7 @@ export default class App extends React.Component {
 					...prevState,
 					...mailBox
 				}
-
+				this._saveMailBox(newState.mailBox)
 				return { ...newState }
 			})
 		} else if (option == 'delete') {
@@ -106,13 +107,40 @@ export default class App extends React.Component {
 					...prevState,
 					...trashBox
 				}
-
+				this._saveTrashBox(newState.trashBox)
 				return { ...newState }
 			})
 		} else {
 			// 에러 체크
 			alert(`${option} is not exist`)
 		}
+	}
+
+	_saveMailBox = newMailBox => {
+		const saveMailBox = AsyncStorage.setItem('mailBox', JSON.stringify(newMailBox))
+	}
+
+	_saveTrashBox = newTrashBox => {
+		const saveTrashBox = AsyncStorage.setItem('trashBox', JSON.stringify(newTrashBox))
+	}
+
+	_loadMail = async () => {
+		try {
+			const mailBox = await AsyncStorage.getItem('mailBox')
+			const trashBox = await AsyncStorage.getItem('trashBox')
+			const parsedMailBox = JSON.parse(mailBox)
+			const parsedTrashBox = JSON.parse(trashBox)
+			this.setState({
+				mailBox: parsedMailBox || {},
+				trashBox: parsedTrashBox || {}
+			})
+		} catch (err) {
+			console.log(err)
+		}
+	}
+
+	componentDidMount = () => {
+		this._loadMail()
 	}
 
 	render() {
