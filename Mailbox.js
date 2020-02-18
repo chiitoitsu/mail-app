@@ -13,19 +13,22 @@ export default class MailBox extends React.Component {
 
 	static propTypes = {
 		mailBox: PropTypes.object.isRequired,
-		setMail: PropTypes.func.isRequired
+		setMail: PropTypes.func.isRequired,
+		throwAll: PropTypes.func.isRequired
 	}
 
 	render() {
 		const { loadedMails } = this.state
-		const { mailBox, setMail } = this.props
+		const { mailBox, setMail, throwAll } = this.props
 
 		if (!loadedMails) {
 			return <AppLoading />
 		}
 		return (
 			<View style={styles.container}>
-				<Text style={styles.title}>전체 메일</Text>
+				<TouchableOpacity onPress={throwAll}>
+					<Text style={styles.title}>전체 메일</Text>
+				</TouchableOpacity>
 
 				<ScrollView style={styles.mailBox} contentContainerStyle={styles.mails}>
 					{Object.values(mailBox).map(mail => (

@@ -116,6 +116,27 @@ export default class App extends React.Component {
 		}
 	}
 
+	_throwAll = () => {
+		this.setState(prevState => {
+			const newState = {
+				...prevState,
+				trashBox: {
+					...prevState.trashBox,
+					...prevState.mailBox
+				}
+			}
+			this._saveTrashBox(newState.trashBox)
+			return { ...newState }
+		})
+		this.setState({ mailBox: {} })
+		this._saveMailBox({})
+	}
+
+	_deleteAll = () => {
+		this.setState({ trashBox: {} })
+		this._saveTrashBox({})
+	}
+
 	_saveMailBox = newMailBox => {
 		const saveMailBox = AsyncStorage.setItem('mailBox', JSON.stringify(newMailBox))
 	}
@@ -167,10 +188,22 @@ export default class App extends React.Component {
 					<StatusBar hidden={true} />
 					{(() => {
 						if (currentScreen == 'mailBox')
-							return <MailBox mailBox={mailBox} setMail={this._setMail} />
+							return (
+								<MailBox
+									mailBox={mailBox}
+									setMail={this._setMail}
+									throwAll={this._throwAll}
+								/>
+							)
 						else if (currentScreen == 'mailAdd') return <MailAdd />
 						else if (currentScreen == 'trashBox')
-							return <TrashBox trashBox={trashBox} setMail={this._setMail} />
+							return (
+								<TrashBox
+									trashBox={trashBox}
+									setMail={this._setMail}
+									deleteAll={this._deleteAll}
+								/>
+							)
 						else
 							return (
 								<View>

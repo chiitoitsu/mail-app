@@ -13,19 +13,22 @@ export default class TrashBox extends React.Component {
 
 	static propTypes = {
 		trashBox: PropTypes.object.isRequired,
-		setMail: PropTypes.func.isRequired
+		setMail: PropTypes.func.isRequired,
+		deleteAll: PropTypes.func.isRequired
 	}
 
 	render() {
 		const { loadedTrashes } = this.state
-		const { trashBox, setMail } = this.props
+		const { trashBox, setMail, deleteAll } = this.props
 
 		if (!loadedTrashes) {
 			return <AppLoading />
 		}
 		return (
 			<View style={styles.container}>
-				<Text style={styles.title}>휴지통</Text>
+				<TouchableOpacity onPress={deleteAll}>
+					<Text style={styles.title}>휴지통</Text>
+				</TouchableOpacity>
 
 				<ScrollView style={styles.trashBox} contentContainerStyle={styles.mails}>
 					{Object.values(trashBox).map(mail => (
