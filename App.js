@@ -117,24 +117,13 @@ export default class App extends React.Component {
 	}
 
 	_throwAll = () => {
-		this.setState(prevState => {
-			const newState = {
-				...prevState,
-				trashBox: {
-					...prevState.trashBox,
-					...prevState.mailBox
-				}
-			}
-			this._saveTrashBox(newState.trashBox)
-			return { ...newState }
-		})
-		this.setState({ mailBox: {} })
-		this._saveMailBox({})
+		const mails = Object.keys(this.state.mailBox)
+		mails.forEach(id => this._setMail(id, 'throw'))
 	}
 
 	_deleteAll = () => {
-		this.setState({ trashBox: {} })
-		this._saveTrashBox({})
+		const mails = Object.keys(this.state.trashBox)
+		mails.forEach(id => this._setMail(id, 'delete'))
 	}
 
 	_saveMailBox = newMailBox => {
