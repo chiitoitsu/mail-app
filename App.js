@@ -110,6 +110,35 @@ export default class App extends React.Component {
 				this._saveTrashBox(newState.trashBox)
 				return { ...newState }
 			})
+		} else if (option == 'restore') {
+			this.setState(prevState => {
+				const restoreMail = {
+					[id]: {
+						...prevState.trashBox[id],
+						isThrowed: false
+					}
+				}
+				const newState = {
+					...prevState,
+					mailBox: {
+						...prevState.mailBox,
+						...restoreMail
+					}
+				}
+				this._saveMailBox(newState.mailBox)
+				return { ...newState }
+			})
+			this.setState(prevState => {
+				const trashBox = prevState.trashBox
+				delete trashBox[id]
+
+				const newState = {
+					...prevState,
+					...trashBox
+				}
+				this._saveTrashBox(newState.trashBox)
+				return { ...newState }
+			})
 		} else {
 			// 에러 체크
 			alert(`${option} is not exist`)

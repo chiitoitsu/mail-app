@@ -39,7 +39,9 @@ export default class Mail extends React.Component {
 				<Menu ref={ref => (this._menu = ref)}>
 					<MenuTrigger />
 					<MenuOptions>
-						<MenuOption onSelect={() => alert(`Save`)} text='Save' />
+						<MenuOption onSelect={() => callback(id, !isThrowed ? 'throw' : 'restore')}>
+							<Text>{!isThrowed ? '보관하기' : '복원하기'}</Text>
+						</MenuOption>
 						<MenuOption onSelect={() => callback(id, !isThrowed ? 'throw' : 'delete')}>
 							<Text style={{ color: 'red' }}>
 								{!isThrowed ? '버리기' : '삭제하기'}
