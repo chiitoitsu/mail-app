@@ -6,23 +6,13 @@ import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-m
 const { height, width } = Dimensions.get('window')
 
 export default class Mail extends React.Component {
-	constructor(props) {
-		super(props)
-		this.state = {
-			id: props.id,
-			sender: props.sender,
-			date: props.date,
-			title: props.title,
-			isThrowed: props.isThrowed
-		}
-	}
-
 	static propTypes = {
 		id: PropTypes.string.isRequired,
 		sender: PropTypes.string.isRequired,
 		date: PropTypes.string.isRequired,
 		title: PropTypes.string.isRequired,
-		isThrowed: PropTypes.bool.isRequired,
+		curPos: PropTypes.string.isRequired,
+		prevPos: PropTypes.string.isRequired,
 		callback: PropTypes.func.isRequired
 	}
 
@@ -31,20 +21,29 @@ export default class Mail extends React.Component {
 	}
 
 	render() {
-		const { id, sender, date, title, isThrowed } = this.state
-		const { callback } = this.props
+		const { id, sender, date, title, curPos, prevPos, callback } = this.props
 
 		return (
-			<TouchableOpacity style={styles.container} onLongPress={this._openMenu}>
+			<TouchableOpacity
+				style={styles.container}
+				onPress={() => callback(id, 'edit')}
+				onLongPress={this._openMenu}
+			>
 				<Menu ref={ref => (this._menu = ref)}>
 					<MenuTrigger />
 					<MenuOptions>
-						<MenuOption onSelect={() => callback(id, !isThrowed ? 'throw' : 'restore')}>
-							<Text>{!isThrowed ? '보관하기' : '복원하기'}</Text>
+						<MenuOption
+							onSelect={() =>
+								callback(id, curPos != 'trashBox' ? 'throw' : 'restore')
+							}
+						>
+							<Text>{curPos != 'trashBox' ? '보관하기' : '복원하기'}</Text>
 						</MenuOption>
-						<MenuOption onSelect={() => callback(id, !isThrowed ? 'throw' : 'delete')}>
+						<MenuOption
+							onSelect={() => callback(id, curPos != 'trashBox' ? 'throw' : 'delete')}
+						>
 							<Text style={{ color: 'red' }}>
-								{!isThrowed ? '버리기' : '삭제하기'}
+								{curPos != 'trashBox' ? '버리기' : '삭제하기'}
 							</Text>
 						</MenuOption>
 						<MenuOption

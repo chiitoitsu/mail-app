@@ -18,6 +18,7 @@ import SideMenu from './Sidemenu'
 import MailBox from './Mailbox'
 import MailAdd from './Mailadd'
 import TrashBox from './Trashbox'
+import PostBox from './Postbox'
 
 const { height, width } = Dimensions.get('window')
 
@@ -26,7 +27,29 @@ export default class App extends React.Component {
 		currentScreen: 'mailBox', // option, mailBox, mailAdd, postBox, trashBox
 		mailBox: {}, // 전체 메일
 		postBox: {}, // 메일 보관함
-		trashBox: {} // 휴지통
+		trashBox: {}, // 휴지통
+		sideMenu: {
+			mailBox: {
+				text: '전체 메일',
+				screen: 'mailBox',
+				icon: 'home-outline'
+			},
+			mailAdd: {
+				text: '메일 추가',
+				screen: 'mailAdd',
+				icon: 'note-plus-outline'
+			},
+			postBox: {
+				text: '보관함 추가',
+				screen: 'postBox',
+				icon: 'folder-multiple-outline'
+			},
+			trashBox: {
+				text: '휴지통',
+				screen: 'trashBox',
+				icon: 'trash-can-outline'
+			}
+		}
 	}
 
 	_setScreen = dataFromChild => {
@@ -51,7 +74,8 @@ export default class App extends React.Component {
 					sender: '나',
 					date: '2020.01.01',
 					title: ID,
-					isThrowed: false
+					curPos: 'mailBox',
+					prevPos: 'mailBox'
 				}
 			}
 			const newState = {
@@ -67,13 +91,14 @@ export default class App extends React.Component {
 	}
 
 	_setMail = (id, option) => {
+		console.log(option)
 		if (option == 'throw') {
 			// 버리기
 			this.setState(prevState => {
 				const throwedMail = {
 					[id]: {
 						...prevState.mailBox[id],
-						isThrowed: true
+						curPos: 'trashBox'
 					}
 				}
 				const newState = {
@@ -115,7 +140,7 @@ export default class App extends React.Component {
 				const restoreMail = {
 					[id]: {
 						...prevState.trashBox[id],
-						isThrowed: false
+						curPos: 'mailBox'
 					}
 				}
 				const newState = {
@@ -139,6 +164,7 @@ export default class App extends React.Component {
 				this._saveTrashBox(newState.trashBox)
 				return { ...newState }
 			})
+		} else if (option == 'edit') {
 		} else {
 			// 에러 체크
 			alert(`${option} is not exist`)
@@ -178,12 +204,25 @@ export default class App extends React.Component {
 		}
 	}
 
+	_addPostBox = newMenu => {
+		this.setState(prevState => {
+			const newState = {
+				...prevState,
+				sideMenu: {
+					...prevState.sideMenu,
+					...newMenu
+				}
+			}
+			return { ...newState }
+		})
+	}
+
 	componentDidMount = () => {
 		this._loadMail()
 	}
 
 	render() {
-		const { currentScreen, mailBox, postBox, trashBox } = this.state
+		const { currentScreen, mailBox, postBox, trashBox, sideMenu } = this.state
 
 		return (
 			<MenuProvider>
@@ -194,7 +233,7 @@ export default class App extends React.Component {
 					ref={ref => (this._drawer = ref)}
 					type='overlay'
 					side='left'
-					content={<SideMenu callback={this._setScreen} />}
+					content={<SideMenu sideMenu={sideMenu} callback={this._setScreen} />}
 					tapToClose={true}
 					openDrawerOffset={0.5} // 50% gap on the right side of drawer
 					panOpenMask={0.5}
@@ -214,6 +253,8 @@ export default class App extends React.Component {
 								/>
 							)
 						else if (currentScreen == 'mailAdd') return <MailAdd />
+						else if (currentScreen == 'postBox')
+							return <PostBox callback={this._addPostBox} />
 						else if (currentScreen == 'trashBox')
 							return (
 								<TrashBox
