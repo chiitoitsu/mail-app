@@ -27,12 +27,13 @@ export default class PostBox extends React.Component {
 			}
 			this.props.callback(newPostBox)
 			this.setState({ selectedIcon: '' })
+		} else {
+			alert('아이콘을 선택해주세요')
 		}
 	}
 
 	render() {
 		const { selectedIcon } = this.state
-		const { addPostBox } = this.props
 
 		return (
 			<View style={styles.container}>
