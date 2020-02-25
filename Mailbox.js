@@ -38,8 +38,7 @@ export default class MailBox extends React.Component {
 							sender={mail.sender}
 							date={mail.date}
 							title={mail.title}
-							curPos={mail.curPos}
-							prevPos={mail.prevPos}
+							isThrowed={mail.isThrowed}
 							callback={setMail}
 						/>
 					))}
