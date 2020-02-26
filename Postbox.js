@@ -19,13 +19,16 @@ export default class PostBox extends React.Component {
 		if (this.state.selectedIcon != '') {
 			const ID = uuidv1()
 			const newPostBox = {
+				[ID]: {}
+			}
+			const newMenu = {
 				[ID]: {
 					text: '새 보관함',
 					screen: ID,
 					icon: this.state.selectedIcon
 				}
 			}
-			this.props.callback(newPostBox)
+			this.props.callback(newPostBox, newMenu)
 			this.setState({ selectedIcon: '' })
 		} else {
 			alert('아이콘을 선택해주세요')

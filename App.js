@@ -68,10 +68,13 @@ export default class App extends React.Component {
 	_addMail = () => {
 		this.setState(prevState => {
 			const ID = uuidv1()
+			const random = Math.floor(Math.random() * 3)
+			const testName = ['나', '연어', '참치']
+
 			const newMail = {
 				[ID]: {
 					id: ID,
-					sender: '나',
+					sender: testName[random],
 					date: '2020.01.01',
 					title: ID,
 					curPos: 'mailBox',
@@ -204,10 +207,14 @@ export default class App extends React.Component {
 		}
 	}
 
-	_addPostBox = newMenu => {
+	_addPostBox = (newPostBox, newMenu) => {
 		this.setState(prevState => {
 			const newState = {
 				...prevState,
+				postBox: {
+					...prevState.postBox,
+					...newPostBox
+				},
 				sideMenu: {
 					...prevState.sideMenu,
 					...newMenu
