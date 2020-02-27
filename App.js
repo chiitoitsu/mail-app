@@ -15,9 +15,8 @@ import { AppLoading } from 'expo'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 // https://expo.github.io/vector-icons/
 import SideMenu from './Sidemenu'
-import MailBox from './Mailbox'
+import MailScreen from './Mailscreen'
 import MailAdd from './Mailadd'
-import TrashBox from './Trashbox'
 import PostBox from './Postbox'
 
 const { height, width } = Dimensions.get('window')
@@ -253,10 +252,11 @@ export default class App extends React.Component {
 					{(() => {
 						if (currentScreen == 'mailBox')
 							return (
-								<MailBox
-									mailBox={mailBox}
+								<MailScreen
+									title='전체 메일'
+									screen={mailBox}
 									setMail={this._setMail}
-									throwAll={this._throwAll}
+									clearAll={this._throwAll}
 								/>
 							)
 						else if (currentScreen == 'mailAdd') return <MailAdd />
@@ -264,10 +264,11 @@ export default class App extends React.Component {
 							return <PostBox callback={this._addPostBox} />
 						else if (currentScreen == 'trashBox')
 							return (
-								<TrashBox
-									trashBox={trashBox}
+								<MailScreen
+									title='휴지통'
+									screen={trashBox}
 									setMail={this._setMail}
-									deleteAll={this._deleteAll}
+									clearAll={this._deleteAll}
 								/>
 							)
 						else
