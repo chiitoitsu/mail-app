@@ -19,15 +19,21 @@ export default class MailScreen extends React.Component {
 	}
 
 	static propTypes = {
+		id: PropTypes.string.isRequired,
 		title: PropTypes.string.isRequired,
 		screen: PropTypes.object.isRequired,
 		setMail: PropTypes.func.isRequired,
 		clearAll: PropTypes.func.isRequired
 	}
 
+	_callback = (mailID, option) => {
+		const pos = this.props.id
+		this.props.setMail(mailID, pos, option)
+	}
+
 	render() {
 		const { keyword } = this.state
-		const { title, screen, setMail, clearAll } = this.props
+		const { title, screen, clearAll } = this.props
 
 		return (
 			<View style={styles.container}>
@@ -54,7 +60,7 @@ export default class MailScreen extends React.Component {
 								title={mail.title}
 								curPos={mail.curPos}
 								prevPos={mail.prevPos}
-								callback={setMail}
+								callback={this._callback}
 							/>
 						))}
 				</ScrollView>

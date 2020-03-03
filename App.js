@@ -24,8 +24,8 @@ const { height, width } = Dimensions.get('window')
 export default class App extends React.Component {
 	state = {
 		currentScreen: 'mailBox', // option, mailBox, mailAdd, postBox, trashBox
+		boxList: ['mailBox', 'trashBox'],
 		mailBox: {}, // 전체 메일
-		postBox: {}, // 메일 보관함
 		trashBox: {}, // 휴지통
 		sideMenu: {
 			mailBox: {
@@ -82,90 +82,94 @@ export default class App extends React.Component {
 			}
 			const newState = {
 				...prevState,
-				mailBox: {
-					...prevState.mailBox,
+				['mailBox']: {
+					...prevState['mailBox'],
 					...newMail
 				}
 			}
-			this._saveMailBox(newState.mailBox)
+			this._saveBox('mailBox', newState['mailBox'])
 			return { ...newState }
 		})
 	}
 
-	_setMail = (id, option) => {
-		console.log(option)
+	_setMail = (id, pos, option) => {
+		console.log(pos)
 		if (option == 'throw') {
 			// 버리기
 			this.setState(prevState => {
 				const throwedMail = {
 					[id]: {
-						...prevState.mailBox[id],
-						curPos: 'trashBox'
+						...prevState[pos][id],
+						curPos: 'trashBox',
+						prevPos: pos
 					}
 				}
 				const newState = {
 					...prevState,
-					trashBox: {
-						...prevState.trashBox,
+					['trashBox']: {
+						...prevState['trashBox'],
 						...throwedMail
 					}
 				}
-				this._saveTrashBox(newState.trashBox)
+				this._saveBox('trashBox', newState['trashBox'])
 				return { ...newState }
 			})
 			this.setState(prevState => {
-				const mailBox = prevState.mailBox
-				delete mailBox[id]
+				const throwedBox = prevState[pos]
+				delete throwedBox[id]
 
 				const newState = {
 					...prevState,
-					...mailBox
+					...throwedBox
 				}
-				this._saveMailBox(newState.mailBox)
+				this._saveBox(pos, newState[pos])
 				return { ...newState }
 			})
 		} else if (option == 'delete') {
 			// 삭제하기
 			this.setState(prevState => {
-				const trashBox = prevState.trashBox
+				const trashBox = prevState['trashBox']
 				delete trashBox[id]
 
 				const newState = {
 					...prevState,
 					...trashBox
 				}
-				this._saveTrashBox(newState.trashBox)
+				this._saveBox('trashBox', newState['trashBox'])
 				return { ...newState }
 			})
 		} else if (option == 'restore') {
 			this.setState(prevState => {
+				const prevBox = prevState.trashBox[id].prevPos
 				const restoreMail = {
 					[id]: {
 						...prevState.trashBox[id],
-						curPos: 'mailBox'
+						curPos: prevBox,
+						prevPos: pos
 					}
 				}
 				const newState = {
 					...prevState,
-					mailBox: {
-						...prevState.mailBox,
+					[prevBox]: {
+						...prevState[prevBox],
 						...restoreMail
 					}
 				}
-				this._saveMailBox(newState.mailBox)
+				this._saveBox(prevBox, newState[prevBox])
 				return { ...newState }
 			})
 			this.setState(prevState => {
-				const trashBox = prevState.trashBox
+				const trashBox = prevState['trashBox']
 				delete trashBox[id]
 
 				const newState = {
 					...prevState,
 					...trashBox
 				}
-				this._saveTrashBox(newState.trashBox)
+				this._saveBox('trashBox', newState['trashBox'])
 				return { ...newState }
 			})
+		} else if (option == 'store') {
 		} else if (option == 'edit') {
 		} else {
 			// 에러 체크
@@ -175,32 +179,41 @@ export default class App extends React.Component {
 
 	_throwAll = () => {
 		const mails = Object.keys(this.state.mailBox)
-		mails.forEach(id => this._setMail(id, 'throw'))
+		mails.forEach(mailID => this._setMail(mailID, 'mailBox', 'throw'))
 	}
 
 	_deleteAll = () => {
 		const mails = Object.keys(this.state.trashBox)
-		mails.forEach(id => this._setMail(id, 'delete'))
+		mails.forEach(mailID => this._setMail(mailID, 'trashBox', 'delete'))
 	}
 
-	_saveMailBox = newMailBox => {
-		const saveMailBox = AsyncStorage.setItem('mailBox', JSON.stringify(newMailBox))
-	}
-
-	_saveTrashBox = newTrashBox => {
-		const saveTrashBox = AsyncStorage.setItem('trashBox', JSON.stringify(newTrashBox))
+	_saveBox = (boxID, box) => {
+		AsyncStorage.setItem(boxID, JSON.stringify(box))
 	}
 
 	_loadMail = async () => {
 		try {
-			const mailBox = await AsyncStorage.getItem('mailBox')
-			const trashBox = await AsyncStorage.getItem('trashBox')
-			const parsedMailBox = JSON.parse(mailBox)
-			const parsedTrashBox = JSON.parse(trashBox)
-			this.setState({
-				mailBox: parsedMailBox || {},
-				trashBox: parsedTrashBox || {}
-			})
+			const state = this.state
+			const boxList = this.state.boxList
+
+			for (let i in state) {
+				for (let j in boxList) {
+					// 리스트에 있는 보관함일 경우
+					if (i == boxList[j]) {
+						const boxID = i
+						const box = await AsyncStorage.getItem(boxID)
+						const parsedBox = JSON.parse(box)
+
+						this.setState(prevState => {
+							const newState = {
+								...prevState,
+								[boxID]: parsedBox || {}
+							}
+							return { ...newState }
+						})
+					}
+				}
+			}
 		} catch (err) {
 			console.log(err)
 		}
@@ -210,10 +223,7 @@ export default class App extends React.Component {
 		this.setState(prevState => {
 			const newState = {
 				...prevState,
-				postBox: {
-					...prevState.postBox,
-					...newPostBox
-				},
+				...newPostBox,
 				sideMenu: {
 					...prevState.sideMenu,
 					...newMenu
@@ -228,7 +238,7 @@ export default class App extends React.Component {
 	}
 
 	render() {
-		const { currentScreen, mailBox, postBox, trashBox, sideMenu } = this.state
+		const { currentScreen, mailBox, trashBox, sideMenu } = this.state
 
 		return (
 			<MenuProvider>
@@ -253,6 +263,7 @@ export default class App extends React.Component {
 						if (currentScreen == 'mailBox')
 							return (
 								<MailScreen
+									id={currentScreen}
 									title='전체 메일'
 									screen={mailBox}
 									setMail={this._setMail}
@@ -265,16 +276,27 @@ export default class App extends React.Component {
 						else if (currentScreen == 'trashBox')
 							return (
 								<MailScreen
+									id={currentScreen}
 									title='휴지통'
 									screen={trashBox}
 									setMail={this._setMail}
 									clearAll={this._deleteAll}
 								/>
 							)
+						else if (typeof this.state[currentScreen] == 'object')
+							return (
+								<MailScreen
+									id={currentScreen}
+									title={currentScreen}
+									screen={this.state[currentScreen]}
+									setMail={this._setMail}
+									clearAll={() => {}}
+								/>
+							)
 						else
 							return (
 								<View>
-									<Text>{currentScreen}</Text>
+									<Text>{currentScreen} is not defined</Text>
 								</View>
 							)
 					})()}
